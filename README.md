@@ -20,7 +20,8 @@ public class APP extends Application {
     public void onCreate() {
         super.onCreate();
         if (mApi == null) {
-            mApi=RxJavaUtil.retrofitBuilder.baseUrl("http://www.yunzhiju.cn/").build().create(Api.class);
+            //替换成你自己的url，以斜杠结尾
+            mApi=RxJavaUtil.retrofitBuilder.baseUrl("http://www.yunzhiju.cn/").build().create(Api.class);
         }
     }
 }
