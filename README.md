@@ -23,3 +23,12 @@ public class APP extends Application {
         }
     }
 }
+
+调用的时候这么写
+
+new Request<HomeBannerResponse>().request(APP.mApi.getHomeBanner(), "tag", this, true, new Result<HomeBannerResponse>() {
+            @Override
+            public void get(HomeBannerResponse response) {
+                HomeBannerResponse response1=response;
+            }
+        });
