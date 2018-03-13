@@ -1,6 +1,6 @@
 # RxUtil 
 ### RxJava+Retrofit的二次封装和使用
-###### compile 'com.github.FizzClown:RxUtil:e6c2fbba63'
+##### 引入依赖: compile 'com.github.FizzClown:RxUtil:e6c2fbba63'
 
 自己生成Api.class文件
 
