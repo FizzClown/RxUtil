@@ -10,6 +10,16 @@ public interface Api {
     //获取主页banner
     @GET("api/Ad/index")
     Observable<HomeBannerResponse> getHomeBanner();
+    
+    //单文件上传
+    @Multipart
+    @POST("api/Friends/addSays")
+    Observable<BaseResponse> publish(@Part MultipartBody.Part file);
+    
+    //多文件上传
+    @Multipart
+    @POST("api/Friends/addSays")
+    Observable<BaseResponse> publish(@PartMap Map<String, RequestBody> file);
 }
 ```
 
@@ -47,42 +57,30 @@ public class APP extends Application {
 
 ##### 单文件上传
 ```Java
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("fpic", file.getName(), requestFile);
-        new Request<BaseResponse>().request(APP.mApi.publis(part), "tag", this, true, new Result<BaseResponse>() {
-            @Override
-            public void get(BaseResponse response) {
-                
-            }
-        });
-                
-
-//Api.class中
-@Multipart
-@POST("api/Friends/addSays")
-Observable<BaseResponse> publish(@Part MultipartBody.Part file);
+RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
+MultipartBody.Part part = MultipartBody.Part.createFormData("fpic", file.getName(), requestFile);
+new Request<BaseResponse>().request(APP.mApi.publis(part), "tag", this, true, new Result<BaseResponse>() {
+    @Override
+    public void get(BaseResponse response) {
+        
+    }
+});
 ```
 ##### 多文件上传
 ```Java
-        Map<String, RequestBody> partMap = new HashMap<>();
+Map<String, RequestBody> partMap = new HashMap<>();
 
-        for (int i = 0; i < pictures.size(); i++) {
-            File file1 = new File(pictures.get(i));
-            RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file1);
-            //这儿的参数就得这么拼 源码中单文件有这个字段 多文件也要加上(其中“fpic[]”是文件名称)
-            partMap.put("fpic[]"+ "\"; filename=\"" + file1.getName() + "\"", fileBody);
-        }
+for (int i = 0; i < pictures.size(); i++) {
+    File file1 = new File(pictures.get(i));
+    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file1);
+    //这儿的参数就得这么拼 源码中单文件有这个字段 多文件也要加上(其中“fpic[]”是文件名称)
+    partMap.put("fpic[]"+ "\"; filename=\"" + file1.getName() + "\"", fileBody);
+}
 
-        new Request<BaseResponse>().request(APP.mApi.publis(partMap), "tag", this, true, new Result<BaseResponse>() {
-            @Override
-            public void get(BaseResponse response) {
-                
-            }
-        });
+new Request<BaseResponse>().request(APP.mApi.publis(partMap), "tag", this, true, new Result<BaseResponse>() {
+    @Override
+    public void get(BaseResponse response) {
         
-        
-//Api.class中
-@Multipart
-@POST("api/Friends/addSays")
-Observable<BaseResponse> publish(@PartMap Map<String, RequestBody> file);
+    }
+});
 ```
