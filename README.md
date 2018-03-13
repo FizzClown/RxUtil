@@ -74,11 +74,13 @@ RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file)
                         }
                         ToastUtil.show(response.msg);
                     }
-                });
-                
-    @Multipart
-    @POST("api/Friends/addSays")
-    Observable<BaseResponse> publish(@Query("user_id") int uid,
+                });
+
+//Api.class中
+
+@Multipart
+@POST("api/Friends/addSays")
+Observable<BaseResponse> publish(@Query("user_id") int uid,
                                      @Query("say_name") String say_name,
                                      @Part MultipartBody.Part file);
 ```
@@ -121,9 +123,11 @@ Map<String, RequestBody> partMap = new HashMap<>();
                     }
                 });
 
-    @Multipart
-    @POST("api/Friends/addSays")
-    Observable<BaseResponse> publish(@Query("user_id") int uid,
+
+//Api.class中
+@Multipart
+@POST("api/Friends/addSays")
+Observable<BaseResponse> publish(@Query("user_id") int uid,
                                      @Query("say_name") String say_name,
                                      @PartMap Map<String, RequestBody> file);
 ```
