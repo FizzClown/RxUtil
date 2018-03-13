@@ -1,4 +1,5 @@
 # RxUtil 
+### RxJava+Retrofit的二次封装和使用
 ###### compile 'com.github.FizzClown:RxUtil:e6c2fbba63'
 
 自己生成Api.class文件
@@ -34,8 +35,8 @@ public class APP extends Application {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //RxJavaUtil.retrofit.create(Api.class);
-        new Request<HomeBannerResponse>().request(APP.mApi.getHomeBanner(), "tag", this, true, new Result<HomeBannerResponse>() {
+        //"tag"是打印日志的标签  this是Context  true：是否显示ProgressDialog  最后是接收到数据的回调
+        new Request<HomeBannerResponse>().request(APP.mApi.getHomeBanner(), "tag", this, true, new Result<HomeBannerResponse>() {
             @Override
             public void get(HomeBannerResponse response) {
                 HomeBannerResponse response1=response;
@@ -46,88 +47,42 @@ public class APP extends Application {
 
 ##### 单文件上传
 ```Java
-RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("fpic", file.getName(), requestFile);
-        sp = RxJavaUtil
-                .xApi()
-                .publish(User.uid(), sayName, part)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BaseResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        sp.unsubscribe();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError: " + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(BaseResponse response) {
-                        if (response.status == 1) {
-                            EventBus.getDefault().post(new PublishSay());
-                            view.finish();
-                        } else if (response.status == -2) {
-                            ActivityManager.overdue();
-                        }
-                        ToastUtil.show(response.msg);
-                    }
-                });
+        new Request<BaseResponse>().request(APP.mApi.publis(part), "tag", this, true, new Result<BaseResponse>() {
+            @Override
+            public void get(BaseResponse response) {
+                
+            }
+        });
+                
 
 //Api.class中
-
 @Multipart
 @POST("api/Friends/addSays")
-Observable<BaseResponse> publish(@Query("user_id") int uid,
-                                     @Query("say_name") String say_name,
-                                     @Part MultipartBody.Part file);
+Observable<BaseResponse> publish(@Part MultipartBody.Part file);
 ```
 ##### 多文件上传
 ```Java
-Map<String, RequestBody> partMap = new HashMap<>();
+        Map<String, RequestBody> partMap = new HashMap<>();
 
         for (int i = 0; i < pictures.size(); i++) {
             File file1 = new File(pictures.get(i));
             RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), file1);
-            //这儿的参数就得这么拼 源码中单文件有这个字段 多文件也要加上
+            //这儿的参数就得这么拼 源码中单文件有这个字段 多文件也要加上(其中“fpic[]”是文件名称)
             partMap.put("fpic[]"+ "\"; filename=\"" + file1.getName() + "\"", fileBody);
         }
 
-        for (String key : partMap.keySet()) {
-            Log.e(TAG, "key= " + key + " and value= " + partMap.get(key));
-        }
-        sp1 = RxJavaUtil
-                .xApi()
-                .publish(User.uid(), sayName, partMap)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BaseResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        sp1.unsubscribe();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "getDeviceData: " + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(BaseResponse response) {
-                        if (response.status == 1) {
-                            view.finish();
-                        }
-                        ToastUtil.show(response.msg);
-                    }
-                });
-
-
+        new Request<BaseResponse>().request(APP.mApi.publis(partMap), "tag", this, true, new Result<BaseResponse>() {
+            @Override
+            public void get(BaseResponse response) {
+                
+            }
+        });
+        
+        
 //Api.class中
 @Multipart
 @POST("api/Friends/addSays")
-Observable<BaseResponse> publish(@Query("user_id") int uid,
-                                     @Query("say_name") String say_name,
-                                     @PartMap Map<String, RequestBody> file);
+Observable<BaseResponse> publish(@PartMap Map<String, RequestBody> file);
 ```
