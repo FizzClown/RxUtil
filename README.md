@@ -61,7 +61,7 @@ public class APP extends Application {
 ```Java
 RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file);
 MultipartBody.Part part = MultipartBody.Part.createFormData("fpic", file.getName(), requestFile);
-new Request<BaseResponse>().request(APP.mApi.publis(part), "tag", this, true, new Result<BaseResponse>() {
+new Request<BaseResponse>().request(APP.mApi.publish(part), "tag", this, true, new Result<BaseResponse>() {
     @Override
     public void get(BaseResponse response) {
         
@@ -79,7 +79,7 @@ for (int i = 0; i < pictures.size(); i++) {
     partMap.put("fpic[]"+ "\"; filename=\"" + file1.getName() + "\"", fileBody);
 }
 
-new Request<BaseResponse>().request(APP.mApi.publis(partMap), "tag", this, true, new Result<BaseResponse>() {
+new Request<BaseResponse>().request(APP.mApi.publish(partMap), "tag", this, true, new Result<BaseResponse>() {
     @Override
     public void get(BaseResponse response) {
         
