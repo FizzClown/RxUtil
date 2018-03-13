@@ -54,8 +54,8 @@ public class APP extends Application {
         });
     }
 ```
-###### "tag"是打印日志的标签  this是Context  true：是否显示ProgressDialog  最后是接收到数据的回调
-###### 其中HomeBannerResponse是泛型可以换成自己的实体类
+##### "tag"是打印日志的标签  this是Context  true：是否显示ProgressDialog  最后是接收到数据的回调
+##### 其中HomeBannerResponse是泛型可以换成自己的实体类
 
 ##### 单文件上传
 ```Java
