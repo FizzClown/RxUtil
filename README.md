@@ -76,7 +76,7 @@ RequestBody requestFile = RequestBody.create(MediaType.parse("image/png"), file)
                     }
                 });
                 
- @Multipart
+    @Multipart
     @POST("api/Friends/addSays")
     Observable<BaseResponse> publish(@Query("user_id") int uid,
                                      @Query("say_name") String say_name,
@@ -120,4 +120,10 @@ Map<String, RequestBody> partMap = new HashMap<>();
                         ToastUtil.show(response.msg);
                     }
                 });
+
+    @Multipart
+    @POST("api/Friends/addSays")
+    Observable<BaseResponse> publish(@Query("user_id") int uid,
+                                     @Query("say_name") String say_name,
+                                     @PartMap Map<String, RequestBody> file);
 ```
